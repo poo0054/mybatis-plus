@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poo0054.dao.TableDynamicDao">
+    <!--  "D:\project\source\mybatis-3\src\main\java\org\apache\ibatis\builder\xml\mybatis-3-mapper.dtd">-->
+
+    <cache-ref namespace="poo0054.dao.TableAttributeDao"/>
+
+    <resultMap type="poo0054.entity.TableDynamic" id="TableDynamicMap">
+        <!--   有参构造方法 -->
+        <!-- <constructor>
+             <arg column="id" javaType="string"/>
+             <arg column="name" javaType="string"/>
+         </constructor>-->
+
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="tableCode" column="table_code" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="value" column="value" jdbcType="VARCHAR"/>
+        <result property="disabled" column="disabled" jdbcType="INTEGER"/>
+        <result property="width" column="width" jdbcType="NUMERIC"/>
+        <result property="fixed" column="fixed" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="typeType" column="type_type" jdbcType="VARCHAR"/>
+        <result property="selectUrl" column="select_url" jdbcType="VARCHAR"/>
+        <result property="align" column="align" jdbcType="VARCHAR"/>
+        <result property="sortable" column="sortable" jdbcType="INTEGER"/>
+        <result property="filters" column="filters" jdbcType="VARCHAR"/>
+        <result property="showSearch" column="show_search" jdbcType="INTEGER"/>
+        <result property="placeholder" column="placeholder" jdbcType="VARCHAR"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+
+    </resultMap>
+
+    <parameterMap id="parmeterSysUser" type="poo0054.entity.TableDynamic">
+        <parameter property="id" javaType="integer"/>
+        <parameter property="tableCode" javaType="String"/>
+    </parameterMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TableDynamicMap">
+        select id,
+               table_code,
+               name,
+               value,
+               disabled,
+               width,
+               fixed,
+               parent_id,
+               type,
+               type_type,
+               select_url,
+               align,
+               sortable,
+               filters,
+               show_search,
+               placeholder,
+               sort
+        from table_dynamic
+        where id = #{id}
+    </select>
+
+    <!--查询单个-->
+    <select id="queryByTableCode" resultMap="TableDynamicMap">
+        select id,
+               table_code,
+               name,
+               value,
+               disabled,
+               width,
+               fixed,
+               parent_id,
+               type,
+               type_type,
+               select_url,
+               align,
+               sortable,
+               filters,
+               show_search,
+               placeholder,
+               sort
+        from table_dynamic
+        where table_code = #{tableCode}
+          and id = #{dyId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TableDynamicMap">
+        select
+        id, table_code, name, value, disabled, width, fixed, parent_id, type, type_type, select_url, align, sortable,
+        filters, show_search, placeholder, sort
+        from table_dynamic
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="tableCode != null and tableCode != ''">
+                and table_code = #{tableCode}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="value != null and value != ''">
+                and value = #{value}
+            </if>
+            <if test="disabled != null">
+                and disabled = #{disabled}
+            </if>
+            <if test="width != null">
+                and width = #{width}
+            </if>
+            <if test="fixed != null and fixed != ''">
+                and fixed = #{fixed}
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="typeType != null and typeType != ''">
+                and type_type = #{typeType}
+            </if>
+            <if test="selectUrl != null and selectUrl != ''">
+                and select_url = #{selectUrl}
+            </if>
+            <if test="align != null and align != ''">
+                and align = #{align}
+            </if>
+            <if test="sortable != null">
+                and sortable = #{sortable}
+            </if>
+            <if test="filters != null and filters != ''">
+                and filters = #{filters}
+            </if>
+            <if test="showSearch != null">
+                and show_search = #{showSearch}
+            </if>
+            <if test="placeholder != null and placeholder != ''">
+                and placeholder = #{placeholder}
+            </if>
+            <if test="sort != null">
+                and sort = #{sort}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from table_dynamic
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="tableCode != null and tableCode != ''">
+                and table_code = #{tableCode}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="value != null and value != ''">
+                and value = #{value}
+            </if>
+            <if test="disabled != null">
+                and disabled = #{disabled}
+            </if>
+            <if test="width != null">
+                and width = #{width}
+            </if>
+            <if test="fixed != null and fixed != ''">
+                and fixed = #{fixed}
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="typeType != null and typeType != ''">
+                and type_type = #{typeType}
+            </if>
+            <if test="selectUrl != null and selectUrl != ''">
+                and select_url = #{selectUrl}
+            </if>
+            <if test="align != null and align != ''">
+                and align = #{align}
+            </if>
+            <if test="sortable != null">
+                and sortable = #{sortable}
+            </if>
+            <if test="filters != null and filters != ''">
+                and filters = #{filters}
+            </if>
+            <if test="showSearch != null">
+                and show_search = #{showSearch}
+            </if>
+            <if test="placeholder != null and placeholder != ''">
+                and placeholder = #{placeholder}
+            </if>
+            <if test="sort != null">
+                and sort = #{sort}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into table_dynamic(table_code, name, value, disabled, width, fixed, parent_id, type, type_type,
+                                  select_url,
+                                  align, sortable, filters, show_search, placeholder, sort)
+        values (#{tableCode}, #{name}, #{value}, #{disabled}, #{width}, #{fixed}, #{parentId}, #{type}, #{typeType},
+                #{selectUrl}, #{align}, #{sortable}, #{filters}, #{showSearch}, #{placeholder}, #{sort})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into table_dynamic(table_code, name, value, disabled, width, fixed, parent_id, type, type_type,
+        select_url,
+        align, sortable, filters, show_search, placeholder, sort)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.tableCode}, #{entity.name}, #{entity.value}, #{entity.disabled}, #{entity.width}, #{entity.fixed},
+            #{entity.parentId}, #{entity.type}, #{entity.typeType}, #{entity.selectUrl}, #{entity.align},
+            #{entity.sortable},
+            #{entity.filters}, #{entity.showSearch}, #{entity.placeholder}, #{entity.sort})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into table_dynamic(table_code, name, value, disabled, width, fixed, parent_id, type, type_type,
+        select_url,
+        align, sortable, filters, show_search, placeholder, sort)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.tableCode}, #{entity.name}, #{entity.value}, #{entity.disabled}, #{entity.width}, #{entity.fixed},
+            #{entity.parentId}, #{entity.type}, #{entity.typeType}, #{entity.selectUrl}, #{entity.align},
+            #{entity.sortable},
+            #{entity.filters}, #{entity.showSearch}, #{entity.placeholder}, #{entity.sort})
+        </foreach>
+        on duplicate key update
+        table_code = values(table_code),
+        name = values(name),
+        value = values(value),
+        disabled = values(disabled),
+        width = values(width),
+        fixed = values(fixed),
+        parent_id = values(parent_id),
+        type = values(type),
+        type_type = values(type_type),
+        select_url = values(select_url),
+        align = values(align),
+        sortable = values(sortable),
+        filters = values(filters),
+        show_search = values(show_search),
+        placeholder = values(placeholder),
+        sort = values(sort)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update table_dynamic
+        <set>
+            <if test="tableCode != null and tableCode != ''">
+                table_code = #{tableCode},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="value != null and value != ''">
+                value = #{value},
+            </if>
+            <if test="disabled != null">
+                disabled = #{disabled},
+            </if>
+            <if test="width != null">
+                width = #{width},
+            </if>
+            <if test="fixed != null and fixed != ''">
+                fixed = #{fixed},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="typeType != null and typeType != ''">
+                type_type = #{typeType},
+            </if>
+            <if test="selectUrl != null and selectUrl != ''">
+                select_url = #{selectUrl},
+            </if>
+            <if test="align != null and align != ''">
+                align = #{align},
+            </if>
+            <if test="sortable != null">
+                sortable = #{sortable},
+            </if>
+            <if test="filters != null and filters != ''">
+                filters = #{filters},
+            </if>
+            <if test="showSearch != null">
+                show_search = #{showSearch},
+            </if>
+            <if test="placeholder != null and placeholder != ''">
+                placeholder = #{placeholder},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from table_dynamic
+        where id = #{id}
+    </delete>
+
+</mapper>
+

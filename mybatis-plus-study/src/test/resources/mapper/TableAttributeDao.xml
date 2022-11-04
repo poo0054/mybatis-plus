@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2022 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poo0054.dao.TableAttributeDao">
+    <!--  "D:\project\source\mybatis-3\src\main\java\org\apache\ibatis\builder\xml\mybatis-3-mapper.dtd">-->
+
+    <!-- eviction必须要有一个cache的构造方法 type需要有一个string的构造方法  -->
+    <cache eviction="FIFO" type="PERPETUAL">
+        <!--  参考db.properties使用方法 同理  -->
+        <property name="username" value="${db.name}"/>
+        <property name="password" value="${db.password}"/>
+    </cache>
+
+    <!-- type 使用 mybatis的别名 可以是自定义的 也可以是mybatis原生的 或者全类名
+       eviction 与type同理 -->
+    <!--  <cache type="" size="1024"/>-->
+
+    <!--  extends="com.poo0054.dao.TableAttributeDao.TableAttributeMap" 是继承那个父类的属性 -->
+    <resultMap type="poo0054.entity.TableAttribute" id="TableAttributeMap">
+        <!--   有参构造方法 -->
+        <!-- <constructor>
+             <arg column="id" javaType="string"/>
+             <arg column="name" javaType="string"/>
+             <arg column="border" javaType="INTEGER"/>
+         </constructor>-->
+        <result property="id1" column="id" javaType="string" jdbcType="VARCHAR"/>
+        <result property="tableCode" column="table_code" jdbcType="VARCHAR"/>
+        <!--        <result property="name" column="name" jdbcType="VARCHAR"/>-->
+        <result property="stripe" column="stripe" jdbcType="INTEGER"/>
+        <result property="urlType" column="url_type" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <!--        <result property="border" column="border" jdbcType="INTEGER"/>-->
+        <result property="height" column="height" jdbcType="VARCHAR"/>
+        <!--    1对1  -->
+        <!--    <association property="companyadmin" />-->
+        <!--    条件查询 -->
+        <!--<discriminator javaType="string" column="table_code">
+            <case value="package" resultType="poo0054.entity.TableDynamic">
+                <association property="tableCodes" column="{tableCode}=table_code,{dyId=id}"
+                             select="poo0054.dao.TableDynamicDao.queryByTableCode"/>
+            </case>
+
+            <case value="storage" resultType="poo0054.entity.TableDynamic">
+                <association property="id1" column="{id}=id1"
+                             select="poo0054.dao.TableDynamicDao.queryById"/>
+            </case>
+        </discriminator>-->
+    </resultMap>
+
+    <!-- <resultMap type="poo0054.entity.TableAttribute" id="CopyTableAttributeMap">
+         <result property="id" column="id" javaType="string" jdbcType="VARCHAR"/>
+         <result property="tableCode" column="table_code" jdbcType="VARCHAR"/>
+         <result property="name" column="name" jdbcType="VARCHAR"/>
+         <result property="url" column="url" jdbcType="VARCHAR"/>
+         <result property="urlType" column="url_type" jdbcType="VARCHAR"/>
+         <result property="stripe" column="stripe" jdbcType="INTEGER"/>
+         <result property="border" column="border" jdbcType="INTEGER"/>
+         <result property="height" column="height" jdbcType="VARCHAR"/>
+     </resultMap>-->
+
+    <parameterMap id="parmeterSysUser" type="poo0054.entity.TableAttribute">
+        <parameter property="id1" javaType="string" jdbcType="VARCHAR"/>
+        <parameter property="tableCode" javaType="string" jdbcType="VARCHAR"/>
+    </parameterMap>
+
+    <sql id="simpleQuery">
+        select id,
+               table_code,
+               name,
+               url,
+               url_type,
+               stripe,
+               border,
+               height
+        from ${whereProperties}
+    </sql>
+
+    <!--查询单个-->
+    <!--    #可以取出公共的properties-->
+    <select id="queryById" resultMap="TableAttributeMap">
+        <include refid="${tableAttribute_query}">
+            <property name="whereProperties" value="${wherePropertiesReplace}"/>
+        </include>
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimitXml" resultMap="TableAttributeMap">
+        select
+        id, table_code, name, url, url_type, stripe, border, height
+        from table_attribute
+        <where>
+            <if test="id1 != null and id1 != ''">
+                and id = #{id1}
+            </if>
+            <if test="tableCode != null ">
+                and table_code = #{tableCode}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="url != null and url != ''">
+                and url = #{url}
+            </if>
+            <if test="urlType != null and urlType != ''">
+                and url_type = #{urlType}
+            </if>
+            <if test="stripe != null">
+                and stripe = #{stripe}
+            </if>
+            <if test="border != null">
+                and border = #{border}
+            </if>
+            <if test="height != null and height != ''">
+                and height = #{height}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from table_attribute
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="tableCode != null and tableCode != ''">
+                and table_code = #{tableCode}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="url != null and url != ''">
+                and url = #{url}
+            </if>
+            <if test="urlType != null and urlType != ''">
+                and url_type = #{urlType}
+            </if>
+            <if test="stripe != null">
+                and stripe = #{stripe}
+            </if>
+            <if test="border != null">
+                and border = #{border}
+            </if>
+            <if test="height != null and height != ''">
+                and height = #{height}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        <selectKey order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into table_attribute(table_code, name, url, url_type, stripe, border, height)
+        values (#{tableCode}, #{name}, #{url}, #{urlType}, #{stripe}, #{border}, #{height})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into table_attribute(table_code, name, url, url_type, stripe, border, height)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.tableCode}, #{entity.name}, #{entity.url}, #{entity.urlType}, #{entity.stripe}, #{entity.border},
+            #{entity.height})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into table_attribute(table_code, name, url, url_type, stripe, border, height)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.tableCode}, #{entity.name}, #{entity.url}, #{entity.urlType}, #{entity.stripe}, #{entity.border},
+            #{entity.height})
+        </foreach>
+        on duplicate key update
+        table_code = values(table_code),
+        name = values(name),
+        url = values(url),
+        url_type = values(url_type),
+        stripe = values(stripe),
+        border = values(border),
+        height = values(height)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update table_attribute
+        <set>
+            <if test="tableCode != null and tableCode != ''">
+                table_code = #{tableCode},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="url != null and url != ''">
+                url = #{url},
+            </if>
+            <if test="urlType != null and urlType != ''">
+                url_type = #{urlType},
+            </if>
+            <if test="stripe != null">
+                stripe = #{stripe},
+            </if>
+            <if test="border != null">
+                border = #{border},
+            </if>
+            <if test="height != null and height != ''">
+                height = #{height},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from table_attribute
+        where id = #{id}
+    </delete>
+
+</mapper>
+

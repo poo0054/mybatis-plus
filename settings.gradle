@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        mavenLocal()
         maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
         maven { url "https://maven.aliyun.com/nexus/content/repositories/gradle-plugin" }
         mavenCentral()
@@ -21,3 +22,5 @@ include 'mybatis-plus-annotation'
 include 'mybatis-plus-extension'
 include 'mybatis-plus-boot-starter'
 include 'mybatis-plus-boot-starter-test'
+
+include 'mybatis-plus-study'
