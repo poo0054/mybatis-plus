@@ -51,6 +51,7 @@ public abstract class InterceptorIgnoreHelper {
         InterceptorIgnore ignore = mapperClass.getAnnotation(InterceptorIgnore.class);
         if (ignore != null) {
             String key = mapperClass.getName();
+            //构建缓存
             InterceptorIgnoreCache cache = buildInterceptorIgnoreCache(key, ignore);
             INTERCEPTOR_IGNORE_CACHE.put(key, cache);
             return cache;

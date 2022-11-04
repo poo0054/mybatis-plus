@@ -28,7 +28,9 @@ public class MybatisXMLConfigBuilderTest {
     void init() throws IOException {
         ResourceLoader loader = new DefaultResourceLoader();
         Resource resource = loader.getResource("classpath:/mybatis-config.xml");
+        //创建
         MybatisXMLConfigBuilder mybatisXMLConfigBuilder = new MybatisXMLConfigBuilder(resource.getInputStream());
+        //解析并构建出configuration
         Configuration configuration = mybatisXMLConfigBuilder.parse();
         MybatisSqlSessionFactoryBuilder mybatisSqlSessionFactoryBuilder = new MybatisSqlSessionFactoryBuilder();
         sessionFactory = mybatisSqlSessionFactoryBuilder.build(configuration);

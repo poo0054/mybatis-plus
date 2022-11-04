@@ -87,21 +87,31 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
         this.type = type;
     }
 
+    /**
+     * 重写
+     */
     @Override
     public void parse() {
         String resource = type.toString();
         if (!configuration.isResourceLoaded(resource)) {
+            //解析xml
             loadXmlResource();
             configuration.addLoadedResource(resource);
             String mapperName = type.getName();
             assistant.setCurrentNamespace(mapperName);
+            //cache
             parseCache();
+            //refCache
             parseCacheRef();
+            //构建 cache
             InterceptorIgnoreHelper.InterceptorIgnoreCache cache = InterceptorIgnoreHelper.initSqlParserInfoCache(type);
+            //循环所有方法
             for (Method method : type.getMethods()) {
+                //必须为真实方法
                 if (!canHaveStatement(method)) {
                     continue;
                 }
+                //有 Select 并且有  ResultMap 注解
                 if (getAnnotationWrapper(method, false, Select.class, SelectProvider.class).isPresent()
                     && method.getAnnotation(ResultMap.class) == null) {
                     parseResultMap(method);
@@ -255,6 +265,7 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
 
     private void createDiscriminatorResultMaps(String resultMapId, Class<?> resultType, TypeDiscriminator discriminator) {
         if (discriminator != null) {
+            //每个case都是一个ResultMap
             for (Case c : discriminator.cases()) {
                 String caseResultMapId = resultMapId + StringPool.DASH + c.value();
                 List<ResultMapping> resultMappings = new ArrayList<>();
@@ -648,7 +659,10 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
 
     private Optional<AnnotationWrapper> getAnnotationWrapper(Method method, boolean errorIfNoMatch,
                                                              Collection<Class<? extends Annotation>> targetTypes) {
+        //当前 databaseId
         String databaseId = configuration.getDatabaseId();
+        //构建出 databaseId - 对应   AnnotationWrapper
+        AnnotationWrapper annotationWrapper = null;
         Map<String, AnnotationWrapper> statementAnnotations = targetTypes.stream()
             .flatMap(x -> Arrays.stream(method.getAnnotationsByType(x))).map(AnnotationWrapper::new)
             .collect(Collectors.toMap(AnnotationWrapper::getDatabaseId, x -> x, (existing, duplicate) -> {
@@ -656,7 +670,6 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
                     existing.getAnnotation(), duplicate.getAnnotation(),
                     method.getDeclaringClass().getName() + StringPool.DOT + method.getName()));
             }));
-        AnnotationWrapper annotationWrapper = null;
         if (databaseId != null) {
             annotationWrapper = statementAnnotations.get(databaseId);
         }

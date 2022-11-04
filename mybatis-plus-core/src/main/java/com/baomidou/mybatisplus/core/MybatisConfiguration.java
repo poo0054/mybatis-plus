@@ -88,9 +88,12 @@ public class MybatisConfiguration extends Configuration {
      * 初始化调用
      */
     public MybatisConfiguration() {
+        //初始化mybatis
         super();
         this.mapUnderscoreToCamelCase = true;
+        //mybatisplus的枚举处理器
         typeHandlerRegistry.setDefaultEnumTypeHandler(CompositeEnumTypeHandler.class);
+        //语言驱动处理器使用mybatisplus的
         languageRegistry.setDefaultDriverClass(MybatisXMLLanguageDriver.class);
     }
 

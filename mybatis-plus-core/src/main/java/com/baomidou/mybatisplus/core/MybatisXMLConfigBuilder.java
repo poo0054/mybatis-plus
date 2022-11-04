@@ -97,6 +97,7 @@ public class MybatisXMLConfigBuilder extends BaseBuilder {
             throw new BuilderException("Each XMLConfigBuilder can only be used once.");
         }
         parsed = true;
+        //解析xml文件
         parseConfiguration(parser.evalNode("/configuration"));
         return configuration;
     }
@@ -118,6 +119,7 @@ public class MybatisXMLConfigBuilder extends BaseBuilder {
             environmentsElement(root.evalNode("environments"));
             databaseIdProviderElement(root.evalNode("databaseIdProvider"));
             typeHandlerElement(root.evalNode("typeHandlers"));
+            //其余基本与mybatis保持一致 只有这里使用自定义的 mybatis-plus
             mapperElement(root.evalNode("mappers"));
         } catch (Exception e) {
             throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
@@ -274,6 +276,7 @@ public class MybatisXMLConfigBuilder extends BaseBuilder {
         configuration.setNullableOnForEach(booleanValueOf(props.getProperty("nullableOnForEach"), false));
         // TODO 下面俩: 1.统一 mapUnderscoreToCamelCase 属性默认值为 true 2.新增`useGeneratedShortKey`属性
         configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), true));
+        //是否生成短key缓存
         ((MybatisConfiguration) configuration).setUseGeneratedShortKey(booleanValueOf(props.getProperty("useGeneratedShortKey"), true));
     }
 
@@ -366,11 +369,18 @@ public class MybatisXMLConfigBuilder extends BaseBuilder {
         }
     }
 
+    /**
+     * package和mapperClass使用自定义的 MybatisMapperRegistry 进行解析
+     *
+     * @param parent
+     * @throws Exception
+     */
     private void mapperElement(XNode parent) throws Exception {
         if (parent != null) {
             for (XNode child : parent.getChildren()) {
                 if ("package".equals(child.getName())) {
                     String mapperPackage = child.getStringAttribute("name");
+                    //主要修改了该值
                     configuration.addMappers(mapperPackage);
                 } else {
                     String resource = child.getStringAttribute("resource");

@@ -76,6 +76,7 @@ public class MybatisMapperRegistry extends MapperRegistry {
     @Override
     public <T> void addMapper(Class<T> type) {
         if (type.isInterface()) {
+            //是否存在
             if (hasMapper(type)) {
                 // TODO 如果之前注入 直接返回
                 return;
